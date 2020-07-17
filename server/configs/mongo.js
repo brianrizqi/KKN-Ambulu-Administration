@@ -1,9 +1,9 @@
 const MongoClient = require('mongodb').MongoClient;
 
-class MongoAPI {
+class MongoConnection {
     static async connectMongo() {
         const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017';
-        const MONGODB_DB = process.env.MONGODB_DB || 'ambulu_admin';
+        const MONGODB_DB = process.env.MONGODB_DB || 'admin_ambulu';
         const client = await MongoClient.connect(MONGODB_URL, {
             useUnifiedTopology: true
         });
@@ -21,9 +21,10 @@ class MongoAPI {
     }
 
     static async findOne(query, collection) {
+        console.log(collection);
         const result = await this.find(query, collection);
         return result[0];
     }
 }
 
-module.exports = MongoAPI;
+module.exports = MongoConnection;
