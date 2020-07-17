@@ -7,8 +7,4 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/test', verifyToken, (req, res) => {
-  res.send("Nggeh");
-})
-
 module.exports = router;

@@ -8,6 +8,7 @@ const {notFoundHandler, errorHandler} = require('./middlewares');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const testRouter = require('./routes/test');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
+app.use('/test', testRouter);
 
 app.use(errorHandler);
 app.use(notFoundHandler);
