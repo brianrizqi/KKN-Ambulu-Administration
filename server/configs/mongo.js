@@ -26,8 +26,8 @@ class MongoConnection {
   }
   
   static async findOne(query, collection) {
-    const result = await this.find(query, collection);
-    return result[0];
+    const dbClient = await this.connectMongo();
+    return await dbClient.collection(collection).findOne(query);
   }
   
   static async clearCollection(collection){

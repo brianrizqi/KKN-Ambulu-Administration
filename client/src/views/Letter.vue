@@ -7,16 +7,43 @@
           :options.sync="options"
           :server-items-length="totalData"
           :loading="loading"
+          :search="search"
           class="elevation-1"
       >
         <template v-slot:top>
           <v-toolbar flat color="white">
-            <v-toolbar-title>Surat</v-toolbar-title>
-            <v-divider
-                class="mx-4"
-                inset
-                vertical
-            ></v-divider>
+            <v-toolbar-title>Daftar Surat</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <div class="row mt-8 hidden-sm-and-down">
+              <v-select
+                  v-model="category"
+                  :items="categories"
+                  label="Kategori"
+                  item-text="name"
+                  item-value="slug"
+                  @change="getDataFromApi"
+                  data-vv-name="category"
+              >
+              </v-select>
+              <v-spacer></v-spacer>
+              <v-select
+                  v-model="year"
+                  :items="years"
+                  label="Tahun"
+                  @change="getDataFromApi"
+                  data-vv-name="category"
+              >
+              </v-select>
+              <v-spacer></v-spacer>
+              <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  @keyup="searchLetter"
+                  single-line
+                  hide-details
+              ></v-text-field>
+            </div>
             <v-spacer></v-spacer>
             <v-btn
                 :to="{ name: 'LetterCreate' }"
@@ -27,6 +54,14 @@
             </v-btn>
           </v-toolbar>
         </template>
+        <template v-slot:item.action="{ item }">
+          <v-btn @click="edit(item)" fab x-small dark class="mr-2 orange">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn fab x-small dark class="green">
+            <v-icon>mdi-download</v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
     </v-container>
   </v-main>
@@ -34,171 +69,88 @@
 
 <script>
 
+  import AdminService from "../services/admin.service";
+
   export default {
     data() {
       return {
+        category: 'all',
+        categories: [],
+        year: (new Date()).getFullYear(),
+        years: [
+          2020,
+          2021,
+          2022,
+          2023
+        ],
+        search: '',
         totalData: 0,
         data: [],
         loading: true,
         options: {},
         headers: [
-          {text: 'No', value: 'no'},
+          {text: 'No', value: 'no', sortable: false, searchable: false},
           {text: 'Nama', value: 'name'},
-          {text: 'Kategori', value: 'calories'},
-          {text: 'Nomor Surat', value: 'fat'},
-          {text: 'Pembuat', value: 'carbs'},
-          {text: 'Tanggal', value: 'protein'},
-          {text: 'Action', value: 'iron'},
+          {text: 'Kategori', value: 'category.name'},
+          {text: 'Nomor Surat', value: 'number'},
+          {text: 'Pembuat', value: 'creator'},
+          {text: 'Tanggal', value: 'created_at'},
+          {text: 'Action', value: 'action', sortable: false, searchable: false},
         ],
       }
     },
     watch: {
       options: {
         handler() {
-          this.getDataFromApi()
-            .then(data => {
-              this.data = data.items
-              this.totalData = data.total
-            })
+          this.getDataFromApi();
         },
         deep: true,
       },
     },
     mounted() {
-      this.getDataFromApi()
-        .then(data => {
-          this.data = data.items
-          this.totalData = data.total
-        })
+      AdminService.getLetterCategories()
+        .then((res) => {
+          if (res.statusCode === 200) {
+            res.data.unshift({
+              name: 'Semua',
+              slug: 'all'
+            });
+            this.categories = res.data;
+          } else {
+            this.$store.dispatch('errorSnackbar', res.message);
+          }
+        });
+      // this.getDataFromApi();
     },
     methods: {
       getDataFromApi() {
-        this.loading = true
-        return new Promise((resolve) => {
-          const {sortBy, sortDesc, page, itemsPerPage} = this.options
-
-          let items = this.getDesserts()
-          const total = items.length
-
-          if (sortBy.length === 1 && sortDesc.length === 1) {
-            items = items.sort((a, b) => {
-              const sortA = a[sortBy[0]]
-              const sortB = b[sortBy[0]]
-
-              if (sortDesc[0]) {
-                if (sortA < sortB) return 1
-                if (sortA > sortB) return -1
-                return 0
-              } else {
-                if (sortA < sortB) return -1
-                if (sortA > sortB) return 1
-                return 0
-              }
-            })
-          }
-
-          if (itemsPerPage > 0) {
-            items = items.slice((page - 1) * itemsPerPage, page * itemsPerPage)
-          }
-
-          setTimeout(() => {
-            this.loading = false
-            resolve({
-              items,
-              total,
-            })
-          }, 1000)
-        })
+        this.options.year = this.year;
+        this.options.search = this.search;
+        this.options.category = this.category;
+        AdminService.getLetters(this.options)
+          .then((response) => {
+            if (response.statusCode === 200) {
+              this.data = response.data.items;
+              this.totalData = response.data.totalData;
+            } else if (response.statusCode === 401) {
+              this.$router.push('/login');
+            } else {
+              this.$store.dispatch('errorSnackbar', response.message);
+            }
+          })
+          .catch((err) => {
+            this.$store.dispatch('errorSnackbar', err.message);
+          });
+        this.loading = false;
       },
-      getDesserts() {
-        return [
-          {
-            no: 1,
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-            iron: '1%',
-          },
-          {
-            no: 2,
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-            iron: '1%',
-          },
-          {
-            no: 3,
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-            iron: '7%',
-          },
-          {
-            no: 4,
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-            iron: '8%',
-          },
-          {
-            no: 5,
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-            iron: '16%',
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-            iron: '0%',
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-            iron: '2%',
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-            iron: '45%',
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-            iron: '22%',
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-            iron: '6%',
-          },
-        ]
-      },
-    },
+      searchLetter() {
+        clearTimeout(this._timerId)
+
+        // delay new call 500ms
+        this._timerId = setTimeout(() => {
+          this.getDataFromApi();
+        }, 500)
+      }
+    }
   }
 </script>

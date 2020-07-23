@@ -4,6 +4,7 @@ var pdf = require("pdf-creator-node");
 var fs = require('fs');
 const MongoAPI = require('../configs/mongo');
 const letterSeeder = require('../seeder/letter_categories');
+const LetterService = require('../services/letter');
 
 router.get('/', async function (req, res, next) {
   const response = await MongoAPI.updateOne({
@@ -37,5 +38,7 @@ router.get('/', async function (req, res, next) {
     });
   
 });
+
+router.get('/1', LetterService.getLetter);
 
 module.exports = router;

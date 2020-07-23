@@ -6,6 +6,7 @@ const {verifyToken} = require('../middlewares/auth');
 router.use(verifyToken);
 
 router.get('/categories', LetterService.getLetterCategories);
+router.get('/', LetterService.getLetter);
 router.post('/create', LetterService.createLetter);
 
 module.exports = router;

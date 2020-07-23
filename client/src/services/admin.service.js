@@ -22,6 +22,16 @@ class AdminService {
         return response.data;
       });
   }
+  
+  static getLetters(options) {
+    return axios.get(`${API_URL}/`, {
+        params: options,
+        headers: authHeader()
+      })
+      .then((response) => {
+        return response.data;
+      })
+  }
 }
 
 export default AdminService;

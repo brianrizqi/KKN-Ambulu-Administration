@@ -117,8 +117,8 @@
           AdminService.createLetter(this.letterData)
             .then((response) => {
               if (response.statusCode === 200) {
-                console.log("asd");
                 this.$store.dispatch('successSnackbar', response.message)
+                this.$router.push({ name: 'Letter' });
               } else {
                 this.$store.dispatch('errorSnackbar', response.message)
               }
