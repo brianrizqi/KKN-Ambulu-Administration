@@ -20,7 +20,6 @@ const UserService = class UserService {
         })
 
         if(validation.error){
-            res.statusCode = 422;
             res.send({
                 statusCode: 422,
                 message: validation.error.message
@@ -31,7 +30,6 @@ const UserService = class UserService {
             }, 'users');
 
             if(!user){
-                res.statusCode = 401;
                 res.send({
                     statusCode: 401,
                     message: `User with username ${req.body.username} not found`
@@ -43,10 +41,15 @@ const UserService = class UserService {
                         user,
                         exp: Math.floor(Date.now() / 1000) + (60 * 60),
                     }, process.env.JWT_SECRET || 'secret');
+                    
+                    delete user['password'];
                     res.send({
                         statusCode: 200,
                         message: 'Login Success',
-                        token: jwtToken
+                        data: {
+                            token: jwtToken,
+                            user
+                        }
                     })
                 } else {
                     res.send({
