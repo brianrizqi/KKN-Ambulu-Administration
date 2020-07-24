@@ -8,5 +8,6 @@ router.use(verifyToken);
 router.get('/categories', LetterService.getLetterCategories);
 router.get('/', LetterService.getLetter);
 router.post('/create', LetterService.createLetter);
+router.post('/download', LetterService.downloadLetter);
 
 module.exports = router;

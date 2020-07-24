@@ -1,6 +1,25 @@
 const MongoConnection = require('../configs/mongo');
 const {getUser} = require('../middlewares/auth');
 const dateformat = require('dateformat');
+const {ObjectId} = require('mongodb');
+const PizZip = require('pizzip');
+const Docxtemplater = require('docxtemplater');
+var path = require('path');
+var fs = require('fs');
+
+dateformat.i18n = {
+  dayNames: [
+    'Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab',
+    'Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'
+  ],
+  monthNames: [
+    'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des',
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ],
+  timeNames: [
+    'a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM'
+  ]
+};
 
 const LetterService = class LetterService {
   static async getLetterCategories(req, res, next) {
@@ -23,9 +42,18 @@ const LetterService = class LetterService {
       });
     }
     
+    const type = category.letters.find(letter => letter.slug === req.body.letter_type);
+    
+    if (!type) {
+      return res.send({
+        statusCode: 500,
+        message: 'Letter Type not found'
+      });
+    }
+    
     const letterData = {};
     
-    category.fields.forEach(field => {
+    type.fields.forEach(field => {
       if (!req.body[field.name]) {
         return res.send({
           statusCode: 422,
@@ -38,8 +66,11 @@ const LetterService = class LetterService {
     
     const user = getUser(req);
     
-    letterData.number = category.number_format.replace(':no', category.counter);
+    delete category['letters'];
+    
     letterData.category = category;
+    letterData.letter_type = type;
+    letterData.number = category.number_format.replace(':no', category.counter);
     letterData.created_at = new Date();
     letterData.updated_at = new Date();
     letterData.creator = user.name;
@@ -63,7 +94,8 @@ const LetterService = class LetterService {
   static async getLetter(req, res, next) {
     const conn = await MongoConnection.connectMongo();
     const {category, year, page, itemsPerPage, sortBy, sortDesc, search} = req.query;
-    let sort, query = {};
+    let sort = {};
+    let query = {};
     if (sortBy && sortBy.length > 0) {
       const sortIndex = sortBy[0];
       sort[sortIndex] = sortDesc + '' === 'true' ? 1 : -1;
@@ -84,7 +116,7 @@ const LetterService = class LetterService {
       ];
     }
     
-    if(category && category !== 'all'){
+    if (category && category !== 'all') {
       query["category.slug"] = category;
     }
     
@@ -113,6 +145,43 @@ const LetterService = class LetterService {
         items: data
       }
     });
+  }
+  
+  static async downloadLetter(req, res, next) {
+    const id = req.body.letterId;
+    const letter = await MongoConnection.findOne({
+      _id: ObjectId(id)
+    }, 'letters');
+    
+    if (!letter) {
+      res.send({
+        statusCode: 404,
+        message: 'Letter Not Found'
+      });
+    }
+    
+    letter.date = dateformat(new Date(letter.created_at), "d mmmm yyyy");
+    
+    const content = fs.readFileSync(path.resolve(`./misc/templates/${letter.letter_type.letter_format_file}`), 'binary');
+    var zip = new PizZip(content);
+    var doc;
+    try {
+      doc = new Docxtemplater(zip);
+      doc.setData(letter);
+      doc.render();
+    } catch (e) {
+      res.send({
+        statusCode: 500,
+        message: e.message
+      });
+    }
+    
+    var buf = doc.getZip()
+      .generate({type: 'nodebuffer'});
+  
+    fs.writeFileSync(path.resolve('./misc/temporary', `${letter.letter_type.name} - ${letter.name}.docx`), buf);
+    
+    res.download(path.resolve('./misc/temporary', `${letter.letter_type.name} - ${letter.name}.docx`));
   }
 }
 

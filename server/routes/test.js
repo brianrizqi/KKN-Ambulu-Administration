@@ -10,6 +10,11 @@ const Docxtemplater = require('docxtemplater');
 var path = require('path');
 
 router.get('/', async function (req, res, next) {
+  letterSeeder();
+  res.send({
+    message: 'dah'
+  });
+  
   const content = fs.readFileSync('./misc/templates/standard.docx', 'binary');
   var zip = new PizZip(content);
   var doc;

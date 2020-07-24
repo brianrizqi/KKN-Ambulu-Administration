@@ -371,79 +371,79 @@ async function exec() {
     },
     
     
-    {
-      name: 'Pindah Nikah',
-      slug: 'pindah-nikah',
-      number_format: 'asd/asd/asd',
-      counter: 1,
-      letters: [
-        {
-          name: 'Pindah Nikah',
-          slug: 'pindah-nikah',
-          letter_format_file: 'pindah-nikah',
-          fields: [
-            FIELDS.name,
-            FIELDS.address_1,
-            FIELDS.address_2,
-            FIELDS.target
-          ]
-        }
-      ]
-    },
-    {
-      name: 'Pindah Tempat',
-      slug: 'pindah-tempat',
-      number_format: 'asd/asd/asd',
-      letter_format_file: 'pindah-tempat',
-      counter: 1,
-      fields: [
-        FIELDS.date,
-        FIELDS.nik,
-        FIELDS.no_kk,
-        FIELDS.name,
-        FIELDS.gender,
-        FIELDS.ttl,
-        FIELDS.religion,
-        FIELDS.job,
-        FIELDS.address_1,
-        FIELDS.address_2,
-        FIELDS.target
-      ]
-    },
-    {
-      name: 'Ahli Waris',
-      slug: 'ahli-waris',
-      number_format: 'asd/asd/asd',
-      letter_format_file: 'legacy',
-      counter: 1,
-      fields: [
-        FIELDS.date,
-        {
-          title: 'Nama Almarhum',
-          name: 'name_past',
-          type: 'text',
-          length: 32
-        },
-        {
-          title: 'Nomor Surat',
-          name: 'letter_number',
-          type: 'text',
-          length: 32
-        },
-        {
-          title: 'Jumlah Ahli Waris',
-          name: 'legacy_count',
-          type: 'number'
-        },
-        {
-          title: 'Nama Ahli Waris',
-          name: 'legacy_name',
-          type: 'text',
-          length: 32
-        },
-        FIELDS.etc
-      ]
-    }
+    // {
+    //   name: 'Pindah Nikah',
+    //   slug: 'pindah-nikah',
+    //   number_format: 'asd/asd/asd',
+    //   counter: 1,
+    //   letters: [
+    //     {
+    //       name: 'Pindah Nikah',
+    //       slug: 'pindah-nikah',
+    //       letter_format_file: 'pindah-nikah',
+    //       fields: [
+    //         FIELDS.name,
+    //         FIELDS.address_1,
+    //         FIELDS.address_2,
+    //         FIELDS.target
+    //       ]
+    //     }
+    //   ]
+    // },
+    // {
+    //   name: 'Pindah Tempat',
+    //   slug: 'pindah-tempat',
+    //   number_format: 'asd/asd/asd',
+    //   letter_format_file: 'pindah-tempat',
+    //   counter: 1,
+    //   fields: [
+    //     FIELDS.date,
+    //     FIELDS.nik,
+    //     FIELDS.no_kk,
+    //     FIELDS.name,
+    //     FIELDS.gender,
+    //     FIELDS.ttl,
+    //     FIELDS.religion,
+    //     FIELDS.job,
+    //     FIELDS.address_1,
+    //     FIELDS.address_2,
+    //     FIELDS.target
+    //   ]
+    // },
+    // {
+    //   name: 'Ahli Waris',
+    //   slug: 'ahli-waris',
+    //   number_format: 'asd/asd/asd',
+    //   letter_format_file: 'legacy',
+    //   counter: 1,
+    //   fields: [
+    //     FIELDS.date,
+    //     {
+    //       title: 'Nama Almarhum',
+    //       name: 'name_past',
+    //       type: 'text',
+    //       length: 32
+    //     },
+    //     {
+    //       title: 'Nomor Surat',
+    //       name: 'letter_number',
+    //       type: 'text',
+    //       length: 32
+    //     },
+    //     {
+    //       title: 'Jumlah Ahli Waris',
+    //       name: 'legacy_count',
+    //       type: 'number'
+    //     },
+    //     {
+    //       title: 'Nama Ahli Waris',
+    //       name: 'legacy_name',
+    //       type: 'text',
+    //       length: 32
+    //     },
+    //     FIELDS.etc
+    //   ]
+    // }
   ]
   await MongoAPI.clearCollection('letter_categories');
   await MongoAPI.insertMany(data, 'letter_categories');

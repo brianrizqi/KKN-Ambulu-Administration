@@ -1,4 +1,5 @@
 import axios from 'axios';
+import authHeader from "@/services/auth-header";
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 
@@ -15,6 +16,16 @@ class AuthService {
         }
         return response.data;
       })
+  }
+  
+  static check(){
+    return axios
+      .get(`${API_URL}/auth/check`, {
+        headers: authHeader()
+      })
+      .then((response) => {
+        return response.statusCode === 200;
+      });
   }
   
   static logout(){

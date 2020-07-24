@@ -15,13 +15,25 @@
                     :disabled="loading"
                     :items="letterCategories"
                     :error-messages="errors"
-                    label="Jenis Surat"
+                    label="Kategori"
                     item-text="name"
                     item-value="slug"
-                    v-on:change="generateForm"
+                    v-on:change="getLetterType"
                     data-vv-name="category"
                     required
                 ></v-select>
+                <v-select
+                    v-model="letterTypeSlug"
+                    v-if="categorySlug !== ''"
+                    :items="letterTypes"
+                    label="Tipe Surat"
+                    item-text="name"
+                    item-value="slug"
+                    v-on:change="generateForm"
+                    required
+                >
+
+                </v-select>
                 <v-form-base :value="letterData" :schema="letterSchema"></v-form-base>
                 <v-btn v-if="showSubmit" color="primary" @click="submitForm" :disabled="!isFormValid">Submit</v-btn>
               </ValidationProvider>
@@ -57,6 +69,9 @@
     },
     data() {
       return {
+        letterTypeSlug: '',
+        letterTypes: [],
+        letterType: {},
         loading: false,
         letterCategories: [],
         categorySlug: '',
@@ -76,6 +91,11 @@
       validate() {
         return this.$refs.form.validate()
       },
+      getLetterType(){
+        this.category = this.letterCategories.find(cat => cat.slug === this.categorySlug);
+        this.letterTypes = this.category.letters;
+        this.letterSchema = {};
+      },
       getLetterCategories() {
         AdminService.getLetterCategories()
           .then((result) => {
@@ -92,9 +112,10 @@
       generateForm() {
         const required = msg => v => !!v || msg;
         const maxLen = l => v => (v && v.length <= l) || `max. ${l} Characters`;
-        const category = this.letterCategories.find(data => data.slug === this.categorySlug);
+        const type = this.letterTypes.find(type => type.slug === this.letterTypeSlug);
+        this.letterType = type;
         const fields = {};
-        category.fields.forEach(field => {
+        type.fields.forEach(field => {
           let rules = [required(`${field.name} is required`)];
           if (field.length) {
             rules.push(maxLen(field.length));
@@ -114,6 +135,7 @@
       submitForm() {
         if(this.validate()){
           this.letterData.category = this.categorySlug;
+          this.letterData.letter_type = this.letterTypeSlug;
           AdminService.createLetter(this.letterData)
             .then((response) => {
               if (response.statusCode === 200) {

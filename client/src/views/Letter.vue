@@ -58,7 +58,7 @@
           <v-btn @click="edit(item)" fab x-small dark class="mr-2 orange">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn fab x-small dark class="green">
+          <v-btn fab x-small dark class="green" v-on:click="download(item)">
             <v-icon>mdi-download</v-icon>
           </v-btn>
         </template>
@@ -123,6 +123,19 @@
       // this.getDataFromApi();
     },
     methods: {
+      download(letter) {
+        AdminService.downloadLetter(letter._id)
+          .then((response) => {
+            var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+            var fileLink = document.createElement('a');
+
+            fileLink.href = fileURL;
+            fileLink.setAttribute('download', `${letter.number}.docx`);
+            document.body.appendChild(fileLink);
+
+            fileLink.click();
+          });
+      },
       getDataFromApi() {
         this.options.year = this.year;
         this.options.search = this.search;
@@ -133,7 +146,7 @@
               this.data = response.data.items;
               this.totalData = response.data.totalData;
             } else if (response.statusCode === 401) {
-              this.$router.push('/login');
+              this.$router.push('/logout');
             } else {
               this.$store.dispatch('errorSnackbar', response.message);
             }

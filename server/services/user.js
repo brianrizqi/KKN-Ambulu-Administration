@@ -60,6 +60,13 @@ const UserService = class UserService {
             }
         }
     }
+    
+    static async authCheck(req, res, next){
+        res.send({
+            statusCode: 200,
+            message: 'Authenticard'
+        });
+    }
 }
 
 module.exports = UserService;

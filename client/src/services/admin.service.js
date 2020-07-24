@@ -32,6 +32,15 @@ class AdminService {
         return response.data;
       })
   }
+  
+  static downloadLetter(id){
+    return axios.post(`${API_URL}/download`, {
+      letterId: id
+    }, {
+      responseType: 'blob',
+      headers: authHeader()
+    });
+  }
 }
 
 export default AdminService;
