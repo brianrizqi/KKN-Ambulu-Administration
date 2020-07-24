@@ -118,8 +118,16 @@ async function exec() {
             FIELDS.name,
             FIELDS.gender,
             FIELDS.ttl,
+            {
+              title: 'Kebangsaan / Suku',
+              name: 'nationality',
+              type: 'text',
+              length: 64
+            },
+            FIELDS.marriage_status,
             FIELDS.religion,
             FIELDS.job,
+            FIELDS.nik,
             FIELDS.address_1,
             FIELDS.address_2,
             FIELDS.etc

@@ -161,6 +161,7 @@ const LetterService = class LetterService {
     }
     
     letter.date = dateformat(new Date(letter.created_at), "d mmmm yyyy");
+    letter.letter_number = letter.number;
     
     const content = fs.readFileSync(path.resolve(`./misc/templates/${letter.letter_type.letter_format_file}`), 'binary');
     var zip = new PizZip(content);
@@ -179,9 +180,9 @@ const LetterService = class LetterService {
     var buf = doc.getZip()
       .generate({type: 'nodebuffer'});
   
-    fs.writeFileSync(path.resolve('./misc/temporary', `${letter.letter_type.name} - ${letter.name}.docx`), buf);
+    fs.writeFileSync(path.resolve('./misc/temporary', `temp.docx`), buf);
     
-    res.download(path.resolve('./misc/temporary', `${letter.letter_type.name} - ${letter.name}.docx`));
+    res.download(path.resolve('./misc/temporary', `temp.docx`));
   }
 }
 
