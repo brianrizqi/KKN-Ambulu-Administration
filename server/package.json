@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "dateformat": "^3.0.3",
     "debug": "~2.6.9",
+    "docxtemplater": "^3.17.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "express-async-errors": "^3.1.1",
@@ -21,7 +22,9 @@
     "mongodb": "^3.5.9",
     "morgan": "~1.9.1",
     "pdf-creator-node": "^1.4.1",
-    "redis": "^3.0.2"
+    "pizzip": "^3.0.6",
+    "redis": "^3.0.2",
+    "written-number": "^0.9.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

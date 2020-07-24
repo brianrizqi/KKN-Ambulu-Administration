@@ -1,11 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Hello Gan</title>
+  <meta charset="UTF-8">
+  <title>Hello Gan</title>
+  <style>
+    * {
+      font-family: "Times New Roman", serif;
+    }
+
+    body {
+      width: 21cm;
+      height: 29.7cm;
+      /*border: black 1px solid;*/
+    }
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .header-logo {
+      width: 100px;
+    }
+
+    .header-text {
+      text-align: center;
+      width: 85%;
+    }
+
+    .header-title {
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .header-subtitle {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .header-address, .header-address > * {
+      font-family: Arial, serif;
+    }
+
+    /*BODY*/
+
+    .title {
+      text-decoration: underline;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    .subtitle {
+      text-align: center;
+    }
+
+    .content {
+      text-indent: 50px;
+      /*text-align: justify;*/
+    }
+
+    .table-content {
+      margin-left: 40px;
+    }
+
+    .content p {
+      margin-bottom: 2px;
+      margin-top: 2px;
+    }
+
+    .footer-left {
+      text-align: center;
+      float: left;
+      width: 50%;
+    }
+
+    .footer-right {
+      text-align: center;
+      float: right;
+      width: 50%;
+    }
+
+    .signature {
+      margin-bottom: 50px;
+    }
+
+    .signature-title {
+      margin-bottom: 90px;
+    }
+
+    .signature-name > .name {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-<h1>{{ this.name }}</h1>
-<p>{{ this.text }}</p>
+<div class="header" style="visibility: {{ this.header }}">
+  <img src="./assets/img/logo-jember.png" alt="" class="header-logo">
+  <div class="header-text">
+    <div class="header-title">
+      PEMERINTAH KABUPATEN JEMBER
+    </div>
+    <div class="header-subtitle">
+      KECAMATAN AMBULU <br>
+      DESA AMBULU
+    </div>
+    <div class="header-address">
+      <i>Jl. Raya Suyitman No. 120 Telp. (0336) 883300</i> <br>
+      Ambulu 68172
+    </div>
+  </div>
+</div>
+<hr style="visibility: {{ this.header }}">
+<hr style="margin-top: -8px; visibility: {{ this.header }}">
+
+<div class="body">
+  <h2 class="title">SURAT KETERANGAN</h2>
+  <div class="subtitle">
+    Nomor : {{ this.letter_number }}
+  </div>
+  <br>
+  <div class="content">
+    <p>
+      Yang bertanda tangan di bawah ini, Kepala Desa Ambulu Kecamatan Ambulu Kabupaten Jember menerangkan dengan
+      sebenarnya bahwa :
+    </p>
+    <br>
+    <table class="table-content">
+      <tr>
+        <td>Nama</td>
+        <td>: <b>{{ this.name }}</b></td>
+      </tr>
+      <tr>
+        <td>Tempat Tgl. Lahir</td>
+        <td>: {{ this.ttl }}</td>
+      </tr>
+      <tr>
+        <td>Kebangsaan / Suku</td>
+        <td>: {{ this.nationality }}</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>: {{ this.mariage_status }}</td>
+      </tr>
+      <tr>
+        <td>Agama</td>
+        <td>: {{ this.religion }}</td>
+      </tr>
+      <tr>
+        <td>Pekerjaan</td>
+        <td>: {{ this.job }}</td>
+      </tr>
+      <tr>
+        <td>Nomor KTP / NIK</td>
+        <td>: {{ this.nik }}</td>
+      </tr>
+      <tr>
+        <td>Alamat / Telp</td>
+        <td>: {{ this.address_1 }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>&nbsp {{ this.address_2 }}</td>
+      </tr>
+    </table>
+    <br>
+    <p>Benar – benar Penduduk Desa Ambulu Kecamatan Ambulu, dan hingga saat sekarang ini masih tetap berdomisili di
+      alamat tersebut diatas.</p>
+    <p>Yang bersangkutan selama menjadi penduduk Desa Ambulu tidak pernah tersangkut dalam perkara tindak pidana, atau
+      tindak pidana kejahatan lainnya baik secara langsung atau tidak langsung.</p>
+    <p>Adapun surat keterangan SKCK ini dipergunakan untuk keperluan persyaratan <b>MELAMAR PEKERJAAN DALAM NEGERI</b>.
+    </p>
+    <p>Demikian surat keterangan ini dibuat dengan sebenarnya dan untuk dapatnya di pergunakan sebagaimana mestinya.</p>
+  </div>
+</div>
+<br>
+<div class="footer">
+  <div class="footer-left">
+    <div class="date">
+      &nbsp
+    </div>
+    <div class="signature">
+      <div class="signature-title">Babinmas Desa Ambulu</div>
+      <div class="signature-name">
+        <div class="name">Miqdad Farcha</div>
+        <div class="name-title">AKP. NRP. 68060149</div>
+      </div>
+    </div>
+
+    <div class="signature">
+      <div class="signature-title">Babinmas Desa Ambulu</div>
+      <div class="signature-name">
+        <div class="name">Miqdad Farcha</div>
+        <div class="name-title">AKP. NRP. 68060149</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-right">
+    <div class="date">
+      Ambulu, 06 Juli 2020
+    </div>
+
+    <div class="signature">
+      <div class="signature-title">Babinmas Desa Ambulu</div>
+      <div class="signature-name">
+        <div class="name">Miqdad Farcha</div>
+        <div class="name-title">AKP. NRP. 68060149</div>
+      </div>
+    </div>
+
+    <div class="signature">
+      <div class="signature-title">Babinmas Desa Ambulu</div>
+      <div class="signature-name">
+        <div class="name">Miqdad Farcha</div>
+        <div class="name-title">AKP. NRP. 68060149</div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
