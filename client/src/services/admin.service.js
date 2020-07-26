@@ -33,7 +33,26 @@ class AdminService {
       })
   }
   
-  static downloadLetter(id){
+  static findLetter(query) {
+    return axios.get(`${API_URL}/find`, {
+        params: query,
+        headers: authHeader()
+      })
+      .then((response) => {
+        return response.data
+      });
+  }
+  
+  static updateLetter(letterData) {
+    return axios.post(`${API_URL}/update`, letterData, {
+        headers: authHeader()
+      })
+      .then((response) => {
+        return response.data;
+      });
+  }
+  
+  static downloadLetter(id) {
     return axios.post(`${API_URL}/download`, {
       letterId: id
     }, {

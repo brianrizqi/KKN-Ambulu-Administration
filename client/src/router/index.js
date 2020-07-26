@@ -7,6 +7,9 @@ import store from "../store";
 import Letter from "../views/Letter";
 import LetterCategories from "../views/LetterCategories";
 import LetterCreate from "../views/LetterCreate";
+import LetterEdit from "../views/LetterEdit";
+import LetterCategoryTypeCreate from "../views/LetterCategoryTypeCreate";
+import LetterCategoryDetail from "../views/LetterCategoryDetail";
 
 Vue.use(VueRouter)
 
@@ -49,6 +52,22 @@ const routes = [
     }
   },
   {
+    path: '/letter-categories/:category',
+    name: 'LetterCategoryDetail',
+    component: LetterCategoryDetail,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/letter-categories/:category/add',
+    name: 'LetterCategoryTypeCreate',
+    component: LetterCategoryTypeCreate,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/letter',
     name: 'Letter',
     component: Letter,
@@ -60,6 +79,14 @@ const routes = [
     path: '/letter/create',
     name: 'LetterCreate',
     component: LetterCreate,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/letter/:category/:type/:no',
+    name: 'LetterEdit',
+    component: LetterEdit,
     meta: {
       requiresAuth: true
     }

@@ -58,9 +58,12 @@
           <v-btn @click="edit(item)" fab x-small dark class="mr-2 orange">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn fab x-small dark class="green" v-on:click="download(item)">
+          <v-btn fab x-small dark class="green mr-2" v-on:click="download(item)">
             <v-icon>mdi-download</v-icon>
           </v-btn>
+<!--          <v-btn fab x-small dark class="primary">-->
+<!--            <v-icon>mdi-information</v-icon>-->
+<!--          </v-btn>-->
         </template>
       </v-data-table>
     </v-container>
@@ -92,7 +95,7 @@
           {text: 'No', value: 'no', sortable: false, searchable: false},
           {text: 'Nama', value: 'name'},
           {text: 'Kategori', value: 'category.name'},
-          {text: 'Nomor Surat', value: 'number'},
+          {text: 'Nomor Surat', value: 'letter_number'},
           {text: 'Pembuat', value: 'creator'},
           {text: 'Tanggal', value: 'created_at'},
           {text: 'Action', value: 'action', sortable: false, searchable: false},
@@ -123,6 +126,17 @@
       // this.getDataFromApi();
     },
     methods: {
+      edit(letter){
+        console.log(letter);
+        this.$router.push({
+          name: 'LetterEdit',
+          params: {
+            category: letter.category.slug,
+            type: letter.letter_type.slug,
+            no: letter.number
+          }
+        });
+      },
       download(letter) {
         AdminService.downloadLetter(letter._id)
           .then((response) => {

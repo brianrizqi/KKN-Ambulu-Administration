@@ -70,7 +70,8 @@ const LetterService = class LetterService {
     
     letterData.category = category;
     letterData.letter_type = type;
-    letterData.number = category.number_format.replace(':no', category.counter);
+    letterData.letter_number = category.number_format.replace(':no', category.counter);
+    letterData.number = category.counter;
     letterData.created_at = new Date();
     letterData.updated_at = new Date();
     letterData.creator = user.name;
@@ -111,7 +112,7 @@ const LetterService = class LetterService {
       query["$or"] = [
         {name: new RegExp(search, "i")},
         {creator: new RegExp(search, "i")},
-        {number: new RegExp(search, "i")},
+        {letter_number: new RegExp(search, "i")},
         {'category.name': new RegExp(search, "i")}
       ];
     }
@@ -129,7 +130,6 @@ const LetterService = class LetterService {
       .toArray();
     
     let counter = itemsPerPage * (page - 1);
-    
     data.forEach((data) => {
       data.created_at = dateformat(new Date(data.created_at), "d mmmm yyyy");
       data.no = ++counter;
@@ -147,6 +147,25 @@ const LetterService = class LetterService {
     });
   }
   
+  static async findLetter(req, res, next) {
+    const query = req.query;
+    query.number = parseInt(query.number);
+    const letter = await MongoConnection.findOne(query, 'letters');
+    if (letter) {
+      res.send({
+        statusCode: 200,
+        message: 'Success',
+        data: letter
+      });
+    } else {
+      res.send({
+        statusCode: 404,
+        message: 'Letter Not Found',
+        data: null
+      });
+    }
+  }
+  
   static async downloadLetter(req, res, next) {
     const id = req.body.letterId;
     const letter = await MongoConnection.findOne({
@@ -161,7 +180,6 @@ const LetterService = class LetterService {
     }
     
     letter.date = dateformat(new Date(letter.created_at), "d mmmm yyyy");
-    letter.letter_number = letter.number;
     
     const content = fs.readFileSync(path.resolve(`./misc/templates/${letter.letter_type.letter_format_file}`), 'binary');
     var zip = new PizZip(content);
@@ -179,10 +197,28 @@ const LetterService = class LetterService {
     
     var buf = doc.getZip()
       .generate({type: 'nodebuffer'});
-  
+    
     fs.writeFileSync(path.resolve('./misc/temporary', `temp.docx`), buf);
     
     res.download(path.resolve('./misc/temporary', `temp.docx`));
+  }
+  
+  static async updateLetter(req, res, next){
+    const letterId = req.body._id;
+    const letter = req.body;
+    delete letter['_id'];
+    
+    letter.created_at = new Date(letter.created_at);
+    letter.updated_at = new Date();
+    
+    const a = await MongoConnection.updateOne({
+      _id: ObjectId(letterId)
+    }, letter, 'letters');
+    
+    res.send({
+      statusCode: 200,
+      message: 'Update Success',
+    });
   }
 }
 
