@@ -17,24 +17,30 @@
                 <v-text-field label="Nama Surat" v-model="name">
 
                 </v-text-field>
+
+                <v-file-input
+                    v-model="documentFile"
+                    placeholder="Upload file dokumen"
+                    label="File input"
+                    prepend-icon="mdi-paperclip"
+                >
+                  <template v-slot:selection="{ text }">
+                    <v-chip
+                        small
+                        label
+                        color="primary"
+                    >
+                      {{ text }}
+                    </v-chip>
+                  </template>
+                </v-file-input>
+                <small class="red--text">* jika ingin mengubah tidak perlu upload dokumen lagi</small>
               </v-card-text>
-              <v-file-input
-                  v-model="attachment"
-                  placeholder="Upload file dokumen"
-                  label="File input"
-                  prepend-icon="mdi-paperclip"
-                  accept=".docx"
-              >
-                <template v-slot:selection="{ text }">
-                  <v-chip
-                      small
-                      label
-                      color="primary">
-                    {{ text }}
-                  </v-chip>
-                </template>
-              </v-file-input>
             </v-card>
+
+            <v-btn class="primary" dark width="100%" elevation="4" v-on:click="update">
+              Submit
+            </v-btn>
           </v-col>
 
           <v-col class="col-lg-9 col-md-6 col-sm-12">
@@ -94,9 +100,6 @@
             <v-btn width="100%" class="green lighten-1 mb-5" dark elevation="4" v-on:click="addVariable">
               Tambah
             </v-btn>
-            <v-btn class="primary" dark width="100%" elevation="4" v-on:click="submit">
-              Submit
-            </v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -109,12 +112,13 @@
   import AdminService from "../services/admin.service";
 
   export default {
-    name: "LetterCategoryTypeCreate",
+    name: "LetterCategoryTypeEdit",
     data: () => {
       return {
         name: '',
         category: {},
-        attachment: null,
+        type: {},
+        documentFile: null,
         variableTypes: [
           'text',
           'number',
@@ -133,10 +137,14 @@
     },
     mounted() {
       const categorySlug = this.$route.params.category;
+      const typeSlug = this.$route.params.type;
       AdminService.getLetterCategories()
         .then((res) => {
           if (res.statusCode === 200) {
             this.category = res.data.find(cat => cat.slug === categorySlug);
+            this.type = this.category.letters.find(type => type.slug === typeSlug);
+            this.variables = this.type.fields;
+            this.name = this.type.name;
           } else if (res.statusCode === 401) {
             this.$router.push('/logout');
           } else {
@@ -176,33 +184,8 @@
             fileLink.click();
           })
       },
-      submit() {
-        if (this.name === '' || this.attachment === null) {
-          this.$store.dispatch('errorSnackbar', 'Silahkan masukan nama surat dan file dokumen');
-          return;
-        }
+      update(){
 
-        const formData = new FormData();
-
-        formData.append('name', this.name);
-        formData.append('attachment', this.attachment);
-        formData.append('fields', JSON.stringify(this.variables));
-
-        AdminService.addCategoryType(this.category.slug, formData)
-          .then((response) => {
-            if (response.statusCode === 200) {
-              this.$store.dispatch('successSnackbar', response.message);
-              this.$router.push({
-                name: 'LetterCategoryDetail', params: {
-                  category: this.category.slug
-                }
-              })
-            } else if (response.statusCode === 401) {
-              this.$router.push('/logout');
-            } else {
-              this.$store.dispatch('errorSnackbar', response.message);
-            }
-          });
       }
     }
   }

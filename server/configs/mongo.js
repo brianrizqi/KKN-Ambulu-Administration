@@ -35,11 +35,26 @@ class MongoConnection {
     return await dbClient.collection(collection).remove({});
   }
   
+  static async pull(query, data, collection){
+    const dbClient = await this.connectMongo();
+    return await dbClient.collection(collection).update(query, {
+      $pull: data
+    });
+  }
+  
   static async updateOne(query, data, collection){
     const dbClient = await this.connectMongo();
     return dbClient.collection(collection)
       .updateOne(query, {
         $set: data
+      });
+  }
+  
+  static async push(query, data, collection){
+    const dbClient = await this.connectMongo();
+    return dbClient.collection(collection)
+      .updateOne(query, {
+        $push: data
       });
   }
 }

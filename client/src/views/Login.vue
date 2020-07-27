@@ -95,7 +95,7 @@
                   user: response.data.user
                 });
                 this.$router.push({
-                  name: 'About'
+                  name: 'Letter'
                 })
               } else {
                 this.showError = true;

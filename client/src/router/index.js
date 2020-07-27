@@ -10,6 +10,7 @@ import LetterCreate from "../views/LetterCreate";
 import LetterEdit from "../views/LetterEdit";
 import LetterCategoryTypeCreate from "../views/LetterCategoryTypeCreate";
 import LetterCategoryDetail from "../views/LetterCategoryDetail";
+import LetterCategoryTypeEdit from "../views/LetterCategoryTypeEdit";
 
 Vue.use(VueRouter)
 
@@ -18,14 +19,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-  },
-  {
-    path: '/about',
-    name: 'About',
-    meta: {
-      requiresAuth: true
-    },
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
     path: '/login',
@@ -63,6 +56,14 @@ const routes = [
     path: '/letter-categories/:category/add',
     name: 'LetterCategoryTypeCreate',
     component: LetterCategoryTypeCreate,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/letter-categories/:category/:type/edit',
+    name: 'LetterCategoryTypeEdit',
+    component: LetterCategoryTypeEdit,
     meta: {
       requiresAuth: true
     }
@@ -112,7 +113,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.requiresVisitor)) {
     if(loggedIn){
       next({
-        name: 'About'
+        name: 'Letter'
       })
     } else {
       next();

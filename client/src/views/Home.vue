@@ -13,6 +13,9 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  mounted() {
+    this.$router.push('/letter');
   }
 }
 </script>

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const {notFoundHandler, errorHandler} = require('./middlewares');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

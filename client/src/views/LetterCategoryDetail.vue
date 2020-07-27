@@ -10,7 +10,7 @@
             class="pa-3 d-flex flex-column"
             v-for="type
             in types"
-            :key="type.slug"
+            :key="type._id"
         >
           <v-card
               :color="type.color"
@@ -19,19 +19,19 @@
             <v-card-title class="headline">{{ type.name }}</v-card-title>
             <v-spacer></v-spacer>
             <v-card-actions class="">
-              <v-btn text>
+              <v-btn text v-on:click="downloadType(type.slug)">
                 <v-icon sm class="mr-2">
                   mdi-download
                 </v-icon>
                 Template
               </v-btn>
-              <v-btn text>
-                <v-icon sm class="mr-2">
-                  mdi-pencil
-                </v-icon>
-                Edit
-              </v-btn>
-              <v-btn text>
+<!--              <v-btn text v-on:click="editType(type.slug)">-->
+<!--                <v-icon sm class="mr-2">-->
+<!--                  mdi-pencil-->
+<!--                </v-icon>-->
+<!--                Edit-->
+<!--              </v-btn>-->
+              <v-btn text v-on:click="deleteType(type.slug)">
                 <v-icon sm class="mr-2">
                   mdi-delete
                 </v-icon>
@@ -75,14 +75,39 @@
         })
     },
     methods: {
-      edit(slug){
-        console.log(slug);
+      editType(slug) {
+        this.$router.push({
+          name: 'LetterCategoryTypeEdit', params: {
+            category: this.category.slug,
+            type: slug
+          }
+        })
       },
-      download(slug){
-        console.log(slug);
+      downloadType(slug) {
+        AdminService.downloadCategoryType(this.category.slug, slug)
+          .then((response) => {
+            var fileURL = window.URL.createObjectURL(new Blob([response]));
+            var fileLink = document.createElement('a');
+
+            fileLink.href = fileURL;
+            fileLink.setAttribute('download', `${slug}.docx`);
+            document.body.appendChild(fileLink);
+
+            fileLink.click();
+          })
       },
-      delete(slug){
-        console.log(slug);
+      deleteType(slug) {
+        AdminService.removeCategoryType(this.category.slug, slug)
+          .then((res) => {
+            if (res.statusCode === 200) {
+              this.types = this.types.filter(type => type.slug !== slug);
+              this.$store.dispatch('successSnackbar', res.message);
+            } else if (res.statusCode === 401) {
+              this.$router.push('/logout');
+            } else {
+              this.$store.dispatch('errorSnackbar', res.message);
+            }
+          });
       }
     }
   }

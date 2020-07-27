@@ -14,7 +14,7 @@
           <v-toolbar flat color="white">
             <v-toolbar-title>Daftar Surat</v-toolbar-title>
             <v-spacer></v-spacer>
-            <div class="row mt-8 hidden-sm-and-down">
+            <div class="row mt-8 hidden-md-and-down">
               <v-select
                   v-model="category"
                   :items="categories"
