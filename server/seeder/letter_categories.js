@@ -4,25 +4,29 @@ const FIELDS = {
   date: {
     title: 'Tanggal',
     name: 'date',
-    type: 'date'
+    type: 'date',
+    
   },
   nik: {
     title: 'Nomor KTP / NIK',
     name: 'nik',
     type: 'text',
-    length: 16
+    length: 16,
+    
   },
   no_kk: {
     title: 'No KK',
     name: 'no-kk',
     type: 'text',
-    length: 16
+    length: 16,
+    
   },
   name: {
     title: 'Nama',
     name: 'name',
     type: 'text',
-    length: 64
+    length: 64,
+    
   },
   gender: {
     title: 'Jenis Kelamin',
@@ -31,13 +35,15 @@ const FIELDS = {
     data: [
       'Laki-Laki',
       'Perempuan'
-    ]
+    ],
+    
   },
   ttl: {
     title: 'TTL',
     name: 'ttl',
     type: 'text',
-    length: 32
+    length: 32,
+    
   },
   religion: {
     title: 'Agama',
@@ -50,7 +56,8 @@ const FIELDS = {
       'Budha',
       'Hindu',
       'Lain-Lain'
-    ]
+    ],
+    
   },
   marriage_status: {
     title: 'Status Pernikahan',
@@ -62,46 +69,57 @@ const FIELDS = {
       'Janda/Duda',
       'Cerai',
       'Lain-Lain'
-    ]
+    ],
+    
   },
   job: {
     title: 'Pekerjaan',
     name: 'job',
     type: 'text',
-    length: 32
+    length: 32,
+    
   },
   address_1: {
     title: 'Alamat (Baris 1)',
     name: 'address_1',
     type: 'text',
-    length: 64
+    length: 64,
+    
   },
   address_2: {
     title: 'Alamat (Baris 2)',
     name: 'address_2',
     type: 'text',
-    length: 64
+    length: 64,
+    
   },
   target: {
     title: 'Tujuan',
     name: 'target',
     type: 'text',
-    length: 64
+    length: 64,
+    
   },
   etc: {
     title: 'Keterangan',
     name: 'etc',
     type: 'text',
-    length: 256
+    length: 256,
+    
   },
   age: {
     title: 'Umur',
     name: 'age',
     type: 'number',
+    
   }
 }
 
 async function exec() {
+  for (const key in FIELDS){
+    FIELDS[key].template = key
+  }
+  
   const data = [
     {
       name: 'SKCK',

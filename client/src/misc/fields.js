@@ -97,6 +97,10 @@ const FIELDS = [
     name: 'age',
     type: 'number',
   }
-]
+];
+
+for (const key in FIELDS){
+  FIELDS[key].template = FIELDS[key].name;
+}
 
 export default FIELDS;

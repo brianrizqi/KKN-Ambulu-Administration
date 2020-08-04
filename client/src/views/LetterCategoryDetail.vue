@@ -25,12 +25,12 @@
                 </v-icon>
                 Template
               </v-btn>
-<!--              <v-btn text v-on:click="editType(type.slug)">-->
-<!--                <v-icon sm class="mr-2">-->
-<!--                  mdi-pencil-->
-<!--                </v-icon>-->
-<!--                Edit-->
-<!--              </v-btn>-->
+              <v-btn text v-on:click="editType(type.slug)">
+                <v-icon sm class="mr-2">
+                  mdi-pencil
+                </v-icon>
+                Edit
+              </v-btn>
               <v-btn text v-on:click="deleteType(type.slug)">
                 <v-icon sm class="mr-2">
                   mdi-delete

@@ -14,12 +14,12 @@
 
             <v-card class="pa-3 elevation-4 d-flex flex-column mb-5">
               <v-card-text>
-                <v-text-field label="Nama Surat" v-model="name">
+                <v-text-field label="Nama Surat" v-model="name" disabled>
 
                 </v-text-field>
 
                 <v-file-input
-                    v-model="documentFile"
+                    v-model="attachment"
                     placeholder="Upload file dokumen"
                     label="File input"
                     prepend-icon="mdi-paperclip"
@@ -54,29 +54,30 @@
                 <v-select
                     label="Template"
                     :items="typeTemplates"
-                    v-model="variables[index]"
-                    return-object
+                    v-model="variable.template"
+                    v-on:change="changeTemplate(index)"
+                    item-value="name"
                     item-text="title">
                 </v-select>
                 <v-row>
                   <v-col cols="4">
                     <v-text-field :label="' Nama Variabel ' + (index + 1)"
                                   v-model="variable.name"
-                                  :disabled="variable.name !== 'custom'">
+                                  :disabled="variable.template !== 'custom'">
 
                     </v-text-field>
                   </v-col>
                   <v-col cols="4">
                     <v-text-field :label="' Label Variabel ' + (index + 1)"
                                   v-model="variable.title"
-                                  :disabled="variable.name !== 'custom'">
+                                  :disabled="variable.template !== 'custom'">
 
                     </v-text-field>
                   </v-col>
                   <v-col cols="4">
                     <v-select :items="variableTypes"
                               v-model="variable.type"
-                              :disabled="variable.name !== 'custom'">
+                              :disabled="variable.template !== 'custom'">
 
                     </v-select>
                   </v-col>
@@ -118,7 +119,7 @@
         name: '',
         category: {},
         type: {},
-        documentFile: null,
+        attachment: null,
         variableTypes: [
           'text',
           'number',
@@ -130,7 +131,8 @@
           {
             name: 'custom',
             title: 'Custom',
-            type: 'custom'
+            type: 'custome',
+            template: 'custom'
           }
         ]
       }
@@ -155,7 +157,8 @@
       this.typeTemplates.unshift({
         name: 'custom',
         title: 'Custom',
-        type: 'custom'
+        type: 'custom',
+        template: 'custom'
       });
     },
     methods: {
@@ -163,11 +166,11 @@
         this.variables.splice(index, 1);
       },
       addVariable() {
-        console.log(this.variables);
         this.variables.push({
-          name: '',
-          title: '',
-          type: ''
+          name: 'custom',
+          title: 'Custom',
+          type: 'custom',
+          template: ''
         });
         this.$vuetify.goTo(document.body.scrollHeight);
       },
@@ -184,8 +187,31 @@
             fileLink.click();
           })
       },
-      update(){
+      changeTemplate(index) {
+        this.variables[index] = JSON.parse(JSON.stringify(this.typeTemplates.find(template => template.name === this.variables[index].template)));
+        this.$forceUpdate();
+      },
+      update() {
+        const formData = new FormData();
 
+        formData.append('attachment', this.attachment);
+        formData.append('fields', JSON.stringify(this.variables));
+
+        AdminService.updateCategoryType(this.category.slug, this.type.slug, formData)
+          .then(res => {
+            if (res.statusCode === 200) {
+              this.$store.dispatch('successSnackbar', res.message);
+              this.$router.push({
+                name: 'LetterCategoryDetail', params: {
+                  category: this.category.slug
+                }
+              });
+            } else if (res.statusCode === 401) {
+              this.$router.push('/logout');
+            } else {
+              this.$store.dispatch('errorSnackbar', res.message);
+            }
+          });
       }
     }
   }

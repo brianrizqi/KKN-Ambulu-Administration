@@ -20,6 +20,7 @@ router.post('/update', LetterService.updateLetter);
 
 router.get('/download/example', LetterCategoryService.downloadExample);
 router.post('/:category/add', LetterCategoryService.addCategory);
+router.put('/:category/:type', LetterCategoryService.updateCategoryType);
 router.delete('/:category/:type', LetterCategoryService.deleteCategoryType);
 router.get('/download/:category/:slug', LetterCategoryService.downloadType);
 

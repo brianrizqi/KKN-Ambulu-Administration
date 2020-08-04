@@ -81,6 +81,17 @@ class AdminService {
       })
   }
   
+  static updateCategoryType(category, type, params) {
+    return axios.put(`${API_URL}/${category}/${type}`, params,
+      {
+        'Content-Type': 'multipart/form-data',
+        headers: authHeader()
+      })
+      .then(response => {
+        return response.data;
+      })
+  }
+  
   static downloadCategoryType(category, slug) {
     return axios.get(`${API_URL}/download/${category}/${slug}`, {
       headers: authHeader(),

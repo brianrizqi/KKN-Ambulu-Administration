@@ -64,6 +64,34 @@ const LetterCategoryService = class LetterCategoryService {
       })
     });
   }
+  
+  static async updateCategoryType(req, res){
+    const category = await MongoConnection.findOne({
+      slug: req.params.category,
+    }, 'letter_categories');
+    
+    const letterType = category.letters.find(letter => letter.slug === req.params.type);
+  
+    try {
+      const attachment = req.files.attachment;
+      await attachment.mv(path.resolve(`./misc/templates/${letterType.letter_format_file}`));
+    } catch (e) {
+      console.log(e);
+    }
+    
+    await MongoConnection.updateOne({
+      slug: req.params.category,
+      'letters.slug': req.params.type
+    }, {
+      "letters.$.fields": JSON.parse(req.body.fields)
+    }, 'letter_categories');
+  
+    res.send({
+      statusCode: 200,
+      message: 'Update berhasil'
+    });
+    
+  }
 }
 
 module.exports = LetterCategoryService;

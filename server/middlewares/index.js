@@ -8,13 +8,22 @@ function notFoundHandler(req, res, next){
 }
 
 function errorHandler(err, req, res, next){
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode);
-    res.send({
-        statusCode: statusCode,
-        message: err.message,
-        error: process.env.NODE_ENV === 'production' ? 'Error messages cant be showed' : err.stack
-    });
+    if(err){
+        const statusCode = err.statusCode || 500;
+        res.status(statusCode);
+        res.send({
+            statusCode: statusCode,
+            message: err.message,
+            error: process.env.NODE_ENV === 'production' ? 'Error messages cant be showed' : err.stack
+        });
+    }
+    // const statusCode = err.statusCode || 500;
+    // res.status(statusCode);
+    // res.send({
+    //     statusCode: statusCode,
+    //     message: err.message,
+    //     error: process.env.NODE_ENV === 'production' ? 'Error messages cant be showed' : err.stack
+    // });
 }
 
 module.exports = {

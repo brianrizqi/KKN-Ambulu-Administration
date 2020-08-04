@@ -48,30 +48,30 @@
                 <v-select
                     label="Template"
                     :items="typeTemplates"
-                    v-model="variables[index]"
-                    return-object
+                    v-model="variable.template"
+                    v-on:change="changeTemplate(index)"
+                    item-value="name"
                     item-text="title">
                 </v-select>
                 <v-row>
                   <v-col cols="4">
                     <v-text-field :label="' Nama Variabel ' + (index + 1)"
                                   v-model="variable.name"
-                                  :disabled="variable.name !== 'custom'">
+                                  :disabled="variable.template !== 'custom'">
 
                     </v-text-field>
                   </v-col>
                   <v-col cols="4">
                     <v-text-field :label="' Label Variabel ' + (index + 1)"
                                   v-model="variable.title"
-                                  :disabled="variable.name !== 'custom'">
+                                  :disabled="variable.template !== 'custom'">
 
                     </v-text-field>
                   </v-col>
                   <v-col cols="4">
                     <v-select :items="variableTypes"
                               v-model="variable.type"
-                              :disabled="variable.name !== 'custom'">
-
+                              :disabled="variable.template !== 'custom'">
                     </v-select>
                   </v-col>
                 </v-row>
@@ -126,7 +126,8 @@
           {
             name: 'custom',
             title: 'Custom',
-            type: 'custom'
+            type: 'custom',
+            template: 'custom'
           }
         ]
       }
@@ -147,7 +148,8 @@
       this.typeTemplates.unshift({
         name: 'custom',
         title: 'Custom',
-        type: 'custom'
+        type: 'custom',
+        template: 'custom'
       });
     },
     methods: {
@@ -157,11 +159,15 @@
       addVariable() {
         console.log(this.variables);
         this.variables.push({
-          name: '',
-          title: '',
-          type: ''
+          name: 'custom',
+          title: 'Custom',
+          type: 'custom',
+          template: ''
         });
         this.$vuetify.goTo(document.body.scrollHeight);
+      },
+      changeTemplate(index){
+        this.variables[index] = JSON.parse(JSON.stringify(this.typeTemplates.find(template => template.name === this.variables[index].template)));
       },
       downloadExample() {
         AdminService.downloadExample()

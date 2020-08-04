@@ -32,7 +32,7 @@ class MongoConnection {
   
   static async clearCollection(collection){
     const dbClient = await this.connectMongo();
-    return await dbClient.collection(collection).remove({});
+    return await dbClient.collection(collection).deleteMany({});
   }
   
   static async pull(query, data, collection){
