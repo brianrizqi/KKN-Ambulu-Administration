@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from "@/services/auth-header";
 
-const API_URL = process.env.API_URL || 'http://localhost:3000/letter';
+const API_URL = (process.env.API_URL || 'http://localhost:3000/') + 'letter';
 
 class AdminService {
   static getLetterCategories() {
