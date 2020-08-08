@@ -8,7 +8,6 @@ const {notFoundHandler, errorHandler} = require('./middlewares');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 
-const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const testRouter = require('./routes/test');
 const letterRouter = require('./routes/letter');
@@ -22,7 +21,6 @@ app.use(cookieParser());
 app.use(cors());
 app.use(fileUpload());
 
-app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/test', testRouter);
 app.use('/letter', letterRouter);

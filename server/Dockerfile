@@ -18,6 +18,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["/bin/node", "./bin/www"]
+CMD ["node", "./bin/www"]
 
 EXPOSE 3000

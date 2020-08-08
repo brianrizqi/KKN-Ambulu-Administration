@@ -5,12 +5,13 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    image: backend
     networks:
       - ambulu_admin
     ports:
       - 3000:3000
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       MONGODB_URL: mongodb+srv://miqdadyyy:monalisa123@node-1-lrxak.mongodb.net/pemro?retryWrites=true&w=majority
       MONGODB_DB: ambulu_admin
       JWT_SECRET: L2sa4K3d
@@ -19,13 +20,16 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        VUE_API_URL: http://ip172-18-0-25-bsn1qqlim9m000dldjl0-3000.direct.labs.play-with-docker.com/
+    image: frontend
     networks:
       - ambulu_admin
     ports:
-      - 8080:8080
+      - 80:80
     environment:
-      API_URL: http://157.230.248.47:3000/
+      API_URL: http://ip172-18-0-25-bsn1qqlim9m000dldjl0-3000.direct.labs.play-with-docker.com/
 
 networks:
   ambulu_admin:
-    driver: default
+    driver: bridge

@@ -1,6 +1,4 @@
-FROM node:14.7.0-alpine
-
-RUN npm install -g http-server
+FROM node:14.7.0-alpine as builder
 
 WORKDIR /app
 
@@ -10,10 +8,22 @@ RUN npm install
 
 COPY . .
 
+ARG VUE_API_URL
+
+ENV API_URL $VUE_API_URL
+
+RUN echo $API_URL
+
+RUN echo $VUE_API_URL
+
 RUN npm run build
 
-ENV API_URL http://localhost/
+FROM nginx:alpine
 
-EXPOSE 8080
+WORKDIR /var/www
 
-CMD [ "http-server", "dist" ]
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
