@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const MongoConnection = require('../configs/mongo');
-const BcryptHash = require('../configs/hash')
+const BcryptHash = require('../configs/hash');
 const jwt = require('jsonwebtoken');
 
 const UserService = class UserService {

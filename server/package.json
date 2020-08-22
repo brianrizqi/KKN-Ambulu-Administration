@@ -30,6 +30,7 @@
     "written-number": "^0.9.1"
   },
   "devDependencies": {
+    "@vercel/node": "^1.7.4",
     "nodemon": "^2.0.4"
   }
 }

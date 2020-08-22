@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 class MongoConnection {
   static async connectMongo() {
-    const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017';
+    const MONGODB_URL = 'mongodb://localhost:27017/' //'mongodb+srv://miqdadyyy:monalisa123@node-1-lrxak.mongodb.net/pemro?authSource=admin&replicaSet=Node-1-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true';
     const MONGODB_DB = process.env.MONGODB_DB || 'admin_ambulu';
     const client = await MongoClient.connect(MONGODB_URL, {
       useUnifiedTopology: true
@@ -30,19 +30,19 @@ class MongoConnection {
     return await dbClient.collection(collection).findOne(query);
   }
   
-  static async clearCollection(collection){
+  static async clearCollection(collection) {
     const dbClient = await this.connectMongo();
     return await dbClient.collection(collection).deleteMany({});
   }
   
-  static async pull(query, data, collection){
+  static async pull(query, data, collection) {
     const dbClient = await this.connectMongo();
     return await dbClient.collection(collection).update(query, {
       $pull: data
     });
   }
   
-  static async updateOne(query, data, collection){
+  static async updateOne(query, data, collection) {
     const dbClient = await this.connectMongo();
     return dbClient.collection(collection)
       .updateOne(query, {
@@ -50,7 +50,7 @@ class MongoConnection {
       });
   }
   
-  static async push(query, data, collection){
+  static async push(query, data, collection) {
     const dbClient = await this.connectMongo();
     return dbClient.collection(collection)
       .updateOne(query, {

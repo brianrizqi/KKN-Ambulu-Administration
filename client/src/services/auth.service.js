@@ -1,7 +1,8 @@
 import axios from 'axios';
-import authHeader from "@/services/auth-header";
-
+// const API_URL = process.env.API_URL || 'https://glacial-beach-80244.herokuapp.com';
 const API_URL = process.env.API_URL || 'http://localhost:3000';
+
+import authHeader from "@/services/auth-header";
 
 class AuthService {
   static login(username, password){
