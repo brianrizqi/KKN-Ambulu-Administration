@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 class MongoConnection {
   static async connectMongo() {
-    const MONGODB_URL = 'mongodb://localhost:27017/' //'mongodb+srv://miqdadyyy:monalisa123@node-1-lrxak.mongodb.net/pemro?authSource=admin&replicaSet=Node-1-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true';
+    const MONGODB_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/';
     const MONGODB_DB = process.env.MONGODB_DB || 'admin_ambulu';
     const client = await MongoClient.connect(MONGODB_URL, {
       useUnifiedTopology: true
